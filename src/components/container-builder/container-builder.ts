@@ -10,32 +10,10 @@ import {
 import { FormsModule } from '@angular/forms';
 import * as THREE from 'three';
 import { ContainerScene } from './container-scene';
+import { ShippingContainerForm } from './shipping-container-form/shipping-container-form';
 
-interface Parcel {
-  id: number;
-  name: string;
-  containerPosition: {
-    x: number;
-    y: number;
-    z: number;
-  };
-  geometry: {
-    width: number;
-    height: number;
-    depth: number;
-    color?: string;
-    mesh?: THREE.Mesh;
-  };
-}
 
-interface SuperContainer {
-  name: string;
-  width: number;
-  height: number;
-  depth: number;
-}
-
-const DefaultParcel: Parcel = {
+const DefaultParcel: Container.Parcel = {
   id: 0,
   name: 'Container1',
   containerPosition: { x: 0, y: 1, z: 0 },
@@ -48,6 +26,13 @@ const DefaultParcel: Parcel = {
   imports: [CommonModule, FormsModule],
   templateUrl: './container-builder.html',
   styleUrl: './container-builder.scss',
+  styles: `	
+		:host {
+			display: block;
+			height: 100vh;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		}
+	`,
 })
 export class ContainerBuilder
   extends ContainerScene
@@ -60,16 +45,16 @@ export class ContainerBuilder
     super.init(ref);
   }
 
-  superContainer: SuperContainer = {
+  superContainer: Container.ShippingContainer = {
     name: 'MainContainer',
     width: 10,
     height: 6,
     depth: 10,
   };
 
-  parcels: Parcel[] = [];
-  selectedParcel: Parcel | null = null;
-  parcelForm: Parcel = { ...DefaultParcel };
+  parcels: Container.Parcel[] = [];
+  selectedParcel: Container.Parcel | null = null;
+  parcelForm: Container.Parcel = { ...DefaultParcel };
 
   constructor(private cdr: ChangeDetectorRef) {
     super();
@@ -80,7 +65,7 @@ export class ContainerBuilder
   }
 
   ngOnDestroy(): void {
-		super.destroy()
+    super.destroy();
   }
 
   updateSuperContainerMesh(): void {
@@ -109,7 +94,7 @@ export class ContainerBuilder
 
   private constrainToContainer(
     position: THREE.Vector3,
-    parcel: Parcel
+    parcel: Container.Parcel
   ): THREE.Vector3 {
     const half = {
       width: parcel.geometry.width / 2,
@@ -133,7 +118,7 @@ export class ContainerBuilder
     );
   }
 
-  private createGumball(parcel: Parcel): void {
+  private createGumball(parcel: Container.Parcel): void {
     this.removeGumball();
 
     const gumballGroup = new THREE.Group();
@@ -378,7 +363,7 @@ export class ContainerBuilder
     this.camera.position.multiplyScalar(scale);
   }
 
-  handleSelectParcel(parcel?: Parcel): void {
+  handleSelectParcel(parcel?: Container.Parcel): void {
     const material = (parcel?.geometry.mesh?.material ||
       this.selectedParcel?.geometry.mesh
         ?.material) as THREE.MeshLambertMaterial;
@@ -414,7 +399,7 @@ export class ContainerBuilder
     });
     const mesh = new THREE.Mesh(geometry, material);
 
-    const parcel: Parcel = {
+    const parcel: Container.Parcel = {
       id: Date.now(),
       name: nextName,
       containerPosition: { ...this.parcelForm.containerPosition },
