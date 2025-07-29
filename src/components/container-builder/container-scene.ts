@@ -1,4 +1,5 @@
 import { ElementRef } from '@angular/core';
+import { Container } from 'ol/util/type/container-type';
 import * as THREE from 'three';
 
 export class ContainerScene {
@@ -43,6 +44,38 @@ export class ContainerScene {
       this.renderer.dispose();
     }
     window.removeEventListener('resize', this.handleResize);
+  }
+
+  static constrainToContainer(
+    position: THREE.Vector3,
+    contained: Container.ContainerDatum,
+    container: Container.ContainerDatum
+  ): THREE.Vector3 {
+    const containedHalves = {
+      width: contained.geometry.width / 2,
+      height: contained.geometry.height / 2,
+      depth: contained.geometry.depth / 2,
+		}
+    const containerHalves = {
+      width: container.geometry.width / 2,
+      height: container.geometry.height / 2,
+      depth: container.geometry.depth / 2,
+    };
+
+    const bounds = {
+      minX: -containerHalves.width + containedHalves.width,
+      maxX: containerHalves.width - containedHalves.width,
+      minY: containedHalves.height,
+      maxY: container.geometry.height - containedHalves.height,
+      minZ: -containerHalves.depth + containedHalves.depth,
+      maxZ: containerHalves.depth - containedHalves.depth,
+    };
+
+    return new THREE.Vector3(
+      Math.max(bounds.minX, Math.min(bounds.maxX, position.x)),
+      Math.max(bounds.minY, Math.min(bounds.maxY, position.y)),
+      Math.max(bounds.minZ, Math.min(bounds.maxZ, position.z))
+    );
   }
 
   private initThreeJS(): void {

@@ -275,9 +275,10 @@ export class ContainerBuilder
               this.drag.activeGumballAxis
             ] + (delta as any)[this.drag.activeGumballAxis];
 
-          const constrainedPos = this.constrainToContainer(
+          const constrainedPos = ContainerScene.constrainToContainer(
             newPos,
-            this.selectedParcel
+            this.selectedParcel,
+            this.superContainer
           );
           this.selectedParcel.geometry.mesh.position.copy(constrainedPos);
 
@@ -299,9 +300,10 @@ export class ContainerBuilder
         this.raycaster.ray.intersectPlane(this.drag.dragPlane, intersectPoint);
 
         if (intersectPoint) {
-          const newPosition = this.constrainToContainer(
+          const newPosition = ContainerScene.constrainToContainer(
             intersectPoint,
-            this.selectedParcel
+            this.selectedParcel,
+            this.superContainer
           );
           this.selectedParcel.geometry.mesh.position.copy(newPosition);
 
@@ -349,11 +351,11 @@ export class ContainerBuilder
     this.camera.position.multiplyScalar(scale);
   }
 
-  private getMeshMaterial(parcel: Container.Parcel) {
+  private getMeshMaterial(parcel: Container.ContainerDatum) {
     return parcel?.geometry.mesh?.material;
   }
 
-  handleSelectParcel(parcel?: Container.Parcel): void {
+  handleSelectParcel(parcel?: Container.ContainerDatum): void {
     if (!parcel) {
       this.removeGumball();
     }
@@ -397,7 +399,7 @@ export class ContainerBuilder
       ? this.nextParcelName()
       : this.parcelForm.name;
 
-    const parcel: Container.Parcel = {
+    const parcel: Container.ContainerDatum = {
       id: Date.now(),
       name: useName,
       containerPosition: { ...this.parcelForm.containerPosition },
@@ -407,13 +409,14 @@ export class ContainerBuilder
       },
     };
 
-    const constrainedPos = this.constrainToContainer(
+    const constrainedPos = ContainerScene.constrainToContainer(
       new THREE.Vector3(
         parcel.containerPosition.x,
         parcel.containerPosition.y,
         parcel.containerPosition.z
       ),
-      parcel
+      parcel,
+      this.superContainer
     );
     mesh.position.copy(constrainedPos);
 
@@ -460,13 +463,14 @@ export class ContainerBuilder
       );
     }
 
-    const constrainedPos = this.constrainToContainer(
+    const constrainedPos = ContainerScene.constrainToContainer(
       new THREE.Vector3(
         this.selectedParcel.containerPosition.x,
         this.selectedParcel.containerPosition.y,
         this.selectedParcel.containerPosition.z
       ),
-      this.selectedParcel
+      this.selectedParcel,
+      this.superContainer
     );
     mesh?.position.copy(constrainedPos);
 
