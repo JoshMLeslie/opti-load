@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as THREE from 'three';
+import { ContainerScene } from './container-scene';
 
 interface Parcel {
   id: number;
@@ -48,9 +49,16 @@ const DefaultParcel: Parcel = {
   templateUrl: './container-builder.html',
   styleUrl: './container-builder.scss',
 })
-export class ContainerBuilder implements AfterViewInit, OnDestroy {
-  @ViewChild('canvas', { static: true })
-  canvasRef!: ElementRef<HTMLCanvasElement>;
+export class ContainerBuilder
+  extends ContainerScene
+  implements AfterViewInit, OnDestroy
+{
+  // as canvasRef from super
+  @ViewChild('canvas', { static: true }) set setRef(
+    ref: ElementRef<HTMLCanvasElement>
+  ) {
+    super.init(ref);
+  }
 
   superContainer: SuperContainer = {
     name: 'MainContainer',
@@ -63,106 +71,17 @@ export class ContainerBuilder implements AfterViewInit, OnDestroy {
   selectedParcel: Parcel | null = null;
   parcelForm: Parcel = { ...DefaultParcel };
 
-	// Scene setup
-  private scene!: THREE.Scene;
-  private renderer!: THREE.WebGLRenderer;
-  private camera!: THREE.PerspectiveCamera;
-  private raycaster!: THREE.Raycaster;
-  private mouse = new THREE.Vector2();
-  private controls = { mouseX: 0, mouseY: 0, isRotating: false };
-  private drag = {
-    isDragging: false,
-    dragPlane: new THREE.Plane(),
-    activeGumballAxis: null as string | null,
-  };
-  private superContainerMesh: THREE.Mesh | null = null;
-  private gumball: { gumball: THREE.Group | null; arrows: THREE.Mesh[] } = {
-    gumball: null,
-    arrows: [],
-  };
-  private animationId!: number;
-
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) {
+    super();
+  }
 
   ngAfterViewInit(): void {
-    this.initThreeJS();
+    this.updateSuperContainerMesh();
   }
 
   ngOnDestroy(): void {
-    if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
-    }
-    if (this.renderer) {
-      this.renderer.dispose();
-    }
-    window.removeEventListener('resize', this.handleResize);
+		super.destroy()
   }
-
-  private initThreeJS(): void {
-    // Scene setup
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x222222);
-
-    // Camera setup
-    this.camera = new THREE.PerspectiveCamera(
-      75,
-      (window.innerWidth * 0.6) / window.innerHeight,
-      0.1,
-      1000
-    );
-    this.camera.position.set(8, 8, 8);
-    this.camera.lookAt(0, 0, 0);
-
-    // Renderer setup
-    this.renderer = new THREE.WebGLRenderer({
-      canvas: this.canvasRef.nativeElement,
-      antialias: true,
-    });
-    this.renderer.setSize(window.innerWidth * 0.6, window.innerHeight);
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
-    this.scene.add(ambientLight);
-
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(10, 10, 5);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
-    this.scene.add(directionalLight);
-
-    // Grid
-    const gridHelper = new THREE.GridHelper(20, 20, 0x444444, 0x444444);
-    this.scene.add(gridHelper);
-
-    // Raycaster and drag plane
-    this.raycaster = new THREE.Raycaster();
-    this.drag.dragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-
-    // Create initial super container
-    this.updateSuperContainerMesh();
-
-    // Animation loop
-    this.animate();
-
-    // Handle resize
-    window.addEventListener('resize', this.handleResize.bind(this));
-  }
-
-  private animate = (): void => {
-    this.animationId = requestAnimationFrame(this.animate);
-    this.renderer.render(this.scene, this.camera);
-  };
-
-  private handleResize = (): void => {
-    const width = window.innerWidth * 0.6;
-    const height = window.innerHeight;
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
-  };
 
   updateSuperContainerMesh(): void {
     if (this.superContainerMesh) {
