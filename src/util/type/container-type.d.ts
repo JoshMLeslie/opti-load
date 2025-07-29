@@ -1,4 +1,4 @@
-import { Mesh } from 'three';
+import { BoxGeometry, Mesh, MeshLambertMaterial } from 'three';
 
 export module Container {
   interface ShippingContainer {
@@ -21,7 +21,7 @@ export module Container {
       height: number;
       depth: number;
       color?: string;
-      mesh?: Mesh;
+      mesh?: Mesh<BoxGeometry, MeshLambertMaterial>;
     };
   };
 }

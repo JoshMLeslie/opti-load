@@ -15,7 +15,7 @@ import { ShippingContainerForm } from './shipping-container-form';
 
 const DefaultParcel: Container.Parcel = {
   id: 0,
-  name: 'Container1',
+  name: 'Parcel1',
   containerPosition: { x: 0, y: 1, z: 0 },
   geometry: { width: 2, height: 2, depth: 2, color: '#0167d3' },
 };
@@ -363,32 +363,40 @@ export class ContainerBuilder
     this.camera.position.multiplyScalar(scale);
   }
 
-  handleSelectParcel(parcel?: Container.Parcel): void {
-    const material = (parcel?.geometry.mesh?.material ||
-      this.selectedParcel?.geometry.mesh
-        ?.material) as THREE.MeshLambertMaterial;
+  private getMeshMaterial(parcel: Container.Parcel) {
+    return parcel?.geometry.mesh?.material;
+  }
 
+  handleSelectParcel(parcel?: Container.Parcel): void {
     if (!parcel) {
       this.removeGumball();
     }
 
+    if (parcel !== this.selectedParcel && this.selectedParcel) {
+      this.getMeshMaterial(this.selectedParcel)?.emissive.setHex(0x000000);
+    }
+
     if (!parcel && this.selectedParcel) {
       // Remove illumination from selected parcel
-      material?.emissive.setHex(0x000000);
+      this.getMeshMaterial(this.selectedParcel)?.emissive.setHex(0x000000);
       this.selectedParcel = null;
+      this.parcelForm = {
+        ...DefaultParcel,
+        name: this.nextParcelName(),
+      };
     } else if (parcel) {
       // Illuminate selected parcel
-      material.emissive.setHex(0x444444);
+      this.getMeshMaterial(parcel)?.emissive.setHex(0x444444);
       this.createGumball(parcel);
 
       this.selectedParcel = parcel;
+      this.parcelForm = parcel;
     }
+
     this.cdr.detectChanges();
   }
 
   addParcel(): void {
-    const nextName = `Container${this.parcels.length + 1}`;
-
     const geometry = new THREE.BoxGeometry(
       this.parcelForm.geometry.width,
       this.parcelForm.geometry.height,
@@ -399,15 +407,16 @@ export class ContainerBuilder
     });
     const mesh = new THREE.Mesh(geometry, material);
 
+    let useName = this.selectedParcel
+      ? this.nextParcelName()
+      : this.parcelForm.name;
+
     const parcel: Container.Parcel = {
       id: Date.now(),
-      name: nextName,
+      name: useName,
       containerPosition: { ...this.parcelForm.containerPosition },
       geometry: {
-        width: this.parcelForm.geometry.width,
-        height: this.parcelForm.geometry.height,
-        depth: this.parcelForm.geometry.depth,
-        color: this.parcelForm.geometry.color,
+        ...this.parcelForm.geometry,
         mesh: mesh,
       },
     };
@@ -432,6 +441,8 @@ export class ContainerBuilder
 
     this.parcels.push(parcel);
     this.scene.add(mesh);
+
+    this.parcelForm.name = this.nextParcelName();
   }
 
   updateParcel(): void {
@@ -498,5 +509,9 @@ export class ContainerBuilder
     this.removeGumball();
     this.selectedParcel = null;
     this.cdr.detectChanges();
+  }
+
+  private nextParcelName() {
+    return `Parcel${this.parcels.length + 1}`;
   }
 }
