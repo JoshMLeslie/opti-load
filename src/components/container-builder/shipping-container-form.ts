@@ -14,7 +14,7 @@ import { Container } from 'ol/util/type/container-type';
         <label class="form-label">Name</label>
         <input
           type="text"
-          [(ngModel)]="superContainer.name"
+          [(ngModel)]="superContainer().name"
           class="form-input"
         />
       </div>
