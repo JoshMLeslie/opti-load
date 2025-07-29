@@ -45,16 +45,24 @@ export class ContainerBuilder
     super.init(ref);
   }
 
-  superContainer: Container.ShippingContainer = {
+  superContainer: Container.ContainerDatum = {
+    id: 0,
     name: 'MainContainer',
-    width: 10,
-    height: 6,
-    depth: 10,
+    containerPosition: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    geometry: {
+      width: 10,
+      height: 6,
+      depth: 10,
+    },
   };
 
-  parcels: Container.Parcel[] = [];
-  selectedParcel: Container.Parcel | null = null;
-  parcelForm: Container.Parcel = { ...DefaultParcel };
+  parcels: Container.ContainerDatum[] = [];
+  selectedParcel: Container.ContainerDatum | null = null;
+  parcelForm: Container.ContainerDatum = { ...DefaultParcel };
 
   constructor(private cdr: ChangeDetectorRef) {
     super();
@@ -76,9 +84,9 @@ export class ContainerBuilder
     }
 
     const geometry = new THREE.BoxGeometry(
-      this.superContainer.width,
-      this.superContainer.height,
-      this.superContainer.depth
+      this.superContainer.geometry.width,
+      this.superContainer.geometry.height,
+      this.superContainer.geometry.depth
     );
     const material = new THREE.MeshBasicMaterial({
       color: 0x333333,
@@ -88,37 +96,15 @@ export class ContainerBuilder
     });
 
     this.superContainerMesh = new THREE.Mesh(geometry, material);
-    this.superContainerMesh.position.set(0, this.superContainer.height / 2, 0);
+    this.superContainerMesh.position.set(
+      0,
+      this.superContainer.geometry.height / 2,
+      0
+    );
     this.scene.add(this.superContainerMesh);
   }
 
-  private constrainToContainer(
-    position: THREE.Vector3,
-    parcel: Container.Parcel
-  ): THREE.Vector3 {
-    const half = {
-      width: parcel.geometry.width / 2,
-      height: parcel.geometry.height / 2,
-      depth: parcel.geometry.depth / 2,
-    };
-
-    const bounds = {
-      minX: -this.superContainer.width / 2 + half.width,
-      maxX: this.superContainer.width / 2 - half.width,
-      minY: half.height,
-      maxY: this.superContainer.height - half.height,
-      minZ: -this.superContainer.depth / 2 + half.depth,
-      maxZ: this.superContainer.depth / 2 - half.depth,
-    };
-
-    return new THREE.Vector3(
-      Math.max(bounds.minX, Math.min(bounds.maxX, position.x)),
-      Math.max(bounds.minY, Math.min(bounds.maxY, position.y)),
-      Math.max(bounds.minZ, Math.min(bounds.maxZ, position.z))
-    );
-  }
-
-  private createGumball(parcel: Container.Parcel): void {
+  private createGumball(parcel: Container.ContainerDatum): void {
     this.removeGumball();
 
     const gumballGroup = new THREE.Group();

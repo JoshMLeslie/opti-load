@@ -1,14 +1,17 @@
 import { BoxGeometry, Mesh, MeshLambertMaterial } from 'three';
 
 export module Container {
-  interface ShippingContainer {
-    name: string;
+  interface SimpleGeometry {
     width: number;
     height: number;
     depth: number;
-  };
+  }
+  interface MeshedGeometry extends SimpleGeometry {
+    color?: string;
+    mesh?: Mesh<BoxGeometry, MeshLambertMaterial>;
+  }
 
-  interface Parcel {
+  interface ContainerDatum {
     id: number;
     name: string;
     containerPosition: {
@@ -16,12 +19,7 @@ export module Container {
       y: number;
       z: number;
     };
-    geometry: {
-      width: number;
-      height: number;
-      depth: number;
-      color?: string;
-      mesh?: Mesh<BoxGeometry, MeshLambertMaterial>;
-    };
-  };
+    geometry: MeshedGeometry;
+    children?: ContainerDatum[];
+  }
 }
