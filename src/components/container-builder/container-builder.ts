@@ -8,10 +8,10 @@ import {
 	ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Container } from 'ol/util/type/container-type';
 import * as THREE from 'three';
 import { ContainerScene } from './container-scene';
 import { ShippingContainerForm } from './shipping-container-form/shipping-container-form';
-
 
 const DefaultParcel: Container.Parcel = {
   id: 0,
@@ -23,7 +23,7 @@ const DefaultParcel: Container.Parcel = {
 @Component({
   selector: 'ol-container-builder',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ShippingContainerForm],
   templateUrl: './container-builder.html',
   styleUrl: './container-builder.scss',
   styles: `	
