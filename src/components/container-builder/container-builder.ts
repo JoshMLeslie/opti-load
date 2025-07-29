@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { Container } from 'ol/util/type/container-type';
 import * as THREE from 'three';
 import { ContainerScene } from './container-scene';
-import { ShippingContainerForm } from './shipping-container-form/shipping-container-form';
+import { ShippingContainerForm } from './shipping-container-form';
 
 const DefaultParcel: Container.Parcel = {
   id: 0,

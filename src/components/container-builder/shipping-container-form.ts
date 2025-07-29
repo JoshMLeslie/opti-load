@@ -49,7 +49,7 @@ import { Container } from 'ol/util/type/container-type';
       </div>
     </div>
   `,
-  styleUrl: '../container-builder.scss',
+  styleUrl: './container-builder.scss',
 })
 export class ShippingContainerForm {
   superContainer = model<Container.ShippingContainer>({
