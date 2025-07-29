@@ -1,0 +1,175 @@
+<div class="container-builder">
+  <div class="scene-container">
+    <canvas
+      #canvas
+      (mousedown)="handleMouseDown($event)"
+      (mousemove)="handleMouseMove($event)"
+      (mouseup)="handleMouseUp()"
+      (wheel)="handleMouseWheel($event)"
+      (contextmenu)="$event.preventDefault()"
+      class="scene-canvas"
+    >
+    </canvas>
+    <div class="controls-hint">
+      Left click: Select/Move | Right click: Rotate view | Scroll: Zoom
+    </div>
+  </div>
+
+  <div class="toolkit">
+    <div class="panel super-container-panel">
+      <h3 class="panel-title">Super Container</h3>
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input
+          type="text"
+          [(ngModel)]="superContainer.name"
+          class="form-input"
+        />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Width</label>
+          <input
+            type="number"
+            [(ngModel)]="superContainer.width"
+            (ngModelChange)="updateSuperContainerMesh()"
+            step="0.1"
+            class="form-input"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height</label>
+          <input
+            type="number"
+            [(ngModel)]="superContainer.height"
+            (ngModelChange)="updateSuperContainerMesh()"
+            step="0.1"
+            class="form-input"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Depth</label>
+          <input
+            type="number"
+            [(ngModel)]="superContainer.depth"
+            (ngModelChange)="updateSuperContainerMesh()"
+            step="0.1"
+            class="form-input"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Child Container Parameters -->
+    <div class="panel child-params-panel">
+      <h3 class="panel-title">Parcel Parameters</h3>
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input type="text" [(ngModel)]="parcelForm.name" class="form-input" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Width</label>
+          <input
+            type="number"
+            [(ngModel)]="parcelForm.geometry.width"
+            step="0.1"
+            class="form-input"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Height</label>
+          <input
+            type="number"
+            [(ngModel)]="parcelForm.geometry.height"
+            step="0.1"
+            class="form-input"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Depth</label>
+          <input
+            type="number"
+            [(ngModel)]="parcelForm.geometry.depth"
+            step="0.1"
+            class="form-input"
+          />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">X Position</label>
+          <input
+            type="number"
+            [(ngModel)]="parcelForm.containerPosition.x"
+            step="0.1"
+            class="form-input"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Y Position</label>
+          <input
+            type="number"
+            [(ngModel)]="parcelForm.containerPosition.y"
+            step="0.1"
+            class="form-input"
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Z Position</label>
+          <input
+            type="number"
+            [(ngModel)]="parcelForm.containerPosition.z"
+            step="0.1"
+            class="form-input"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <input
+          type="color"
+          [(ngModel)]="parcelForm.geometry.color"
+          class="form-input color-input"
+        />
+      </div>
+      <div class="button-group">
+        <button (click)="addParcel()" class="btn btn-primary">
+          Add Parcel
+        </button>
+        <button (click)="updateParcel()" class="btn btn-secondary">
+          Update Selected
+        </button>
+        <button (click)="deleteParcel()" class="btn btn-secondary">
+          Delete Selected
+        </button>
+      </div>
+    </div>
+
+    <!-- Child Containers List -->
+    <div class="panel children-list-panel">
+      <h3 class="panel-title">Parcels</h3>
+      <div class="children-list">
+        @if (parcels.length === 0) {
+        <div class="empty-state">No containers yet</div>
+        } @for (parcel of parcels; track parcel.id) {
+        <div
+          (click)="handleSelectParcel(parcel)"
+          class="child-item"
+          [class.selected]="selectedParcel?.id === parcel.id"
+        >
+          <div class="child-name">{{ parcel.name }}</div>
+          <div class="child-details">
+            Size: {{ parcel.geometry.height }}x{{ parcel.geometry.width }}x{{
+              parcel.geometry.depth
+            }}
+            | Pos: ({{ parcel.geometry.mesh?.position?.x?.toFixed(1) }},
+            {{ parcel.geometry.mesh?.position?.y?.toFixed(1) }},
+            {{ parcel.geometry.mesh?.position?.z?.toFixed(1) }})
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
