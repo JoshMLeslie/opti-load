@@ -52,13 +52,13 @@ export class ContainerScene {
     container: Container.ContainerDatum
   ): THREE.Vector3 {
     const containedHalves = {
-      width: contained.geometry.width / 2,
       height: contained.geometry.height / 2,
+      width: contained.geometry.width / 2,
       depth: contained.geometry.depth / 2,
 		}
     const containerHalves = {
-      width: container.geometry.width / 2,
       height: container.geometry.height / 2,
+      width: container.geometry.width / 2,
       depth: container.geometry.depth / 2,
     };
 
