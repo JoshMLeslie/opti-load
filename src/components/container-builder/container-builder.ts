@@ -283,13 +283,13 @@ export class ContainerBuilder
           this.selectedParcel.geometry.mesh.position.copy(constrainedPos);
 
           // Update the parcel's position data
-          this.selectedParcel.containerPosition.x = parseFloat(
+          this.selectedParcel.position.x = parseFloat(
             constrainedPos.x.toFixed(1)
           );
-          this.selectedParcel.containerPosition.y = parseFloat(
+          this.selectedParcel.position.y = parseFloat(
             constrainedPos.y.toFixed(1)
           );
-          this.selectedParcel.containerPosition.z = parseFloat(
+          this.selectedParcel.position.z = parseFloat(
             constrainedPos.z.toFixed(1)
           );
 
@@ -308,15 +308,9 @@ export class ContainerBuilder
           this.selectedParcel.geometry.mesh.position.copy(newPosition);
 
           // Update the parcel's position data
-          this.selectedParcel.containerPosition.x = parseFloat(
-            newPosition.x.toFixed(1)
-          );
-          this.selectedParcel.containerPosition.y = parseFloat(
-            newPosition.y.toFixed(1)
-          );
-          this.selectedParcel.containerPosition.z = parseFloat(
-            newPosition.z.toFixed(1)
-          );
+          this.selectedParcel.position.x = parseFloat(newPosition.x.toFixed(1));
+          this.selectedParcel.position.y = parseFloat(newPosition.y.toFixed(1));
+          this.selectedParcel.position.z = parseFloat(newPosition.z.toFixed(1));
 
           this.updateGumball();
         }
@@ -465,24 +459,18 @@ export class ContainerBuilder
 
     const constrainedPos = ContainerScene.constrainToContainer(
       new THREE.Vector3(
-        this.selectedParcel.containerPosition.x,
-        this.selectedParcel.containerPosition.y,
-        this.selectedParcel.containerPosition.z
+        this.selectedParcel.position.x,
+        this.selectedParcel.position.y,
+        this.selectedParcel.position.z
       ),
       this.selectedParcel,
       this.superContainer
     );
     mesh?.position.copy(constrainedPos);
 
-    this.selectedParcel.containerPosition.x = parseFloat(
-      constrainedPos.x.toFixed(1)
-    );
-    this.selectedParcel.containerPosition.y = parseFloat(
-      constrainedPos.y.toFixed(1)
-    );
-    this.selectedParcel.containerPosition.z = parseFloat(
-      constrainedPos.z.toFixed(1)
-    );
+    this.selectedParcel.position.x = parseFloat(constrainedPos.x.toFixed(1));
+    this.selectedParcel.position.y = parseFloat(constrainedPos.y.toFixed(1));
+    this.selectedParcel.position.z = parseFloat(constrainedPos.z.toFixed(1));
 
     this.updateGumball();
     this.cdr.detectChanges();
