@@ -1,22 +1,32 @@
+import { Container } from '../type/container-type';
+
 export enum CONTAINER_SIZE {
-  TWENTY_FT = "TWENTY_FT",
-  FORTY_FT = "FORTY_FT",
-  FORTY_FIVE_FT = "FORTY_FIVE_FT",
+  TWENTY_FT = 'TWENTY_FT',
+  FORTY_FT = 'FORTY_FT',
+  FORTY_FIVE_FT = 'FORTY_FIVE_FT',
 }
 export enum CONTAINER_TYPE {
-  STANDARD = "STANDARD",
-  HIGH_CUBE = "HIGH_CUBE",
+  STANDARD = 'STANDARD',
+  HIGH_CUBE = 'HIGH_CUBE',
 }
 export enum UNIT_SYSTEM {
-  ENGLISH = "ENGLISH",
-  METRIC = "METRIC",
+  ENGLISH = 'ENGLISH',
+  METRIC = 'METRIC',
 }
 export enum DIMENSION_TYPE {
-  INTERIOR = "INTERIOR",
-  EXTERIOR = "EXTERIOR",
+  INTERIOR = 'INTERIOR',
+  EXTERIOR = 'EXTERIOR',
 }
 
-export const CONTAINER_SIZES = {
+type ContainerTypeData = Record<
+  UNIT_SYSTEM,
+  Record<DIMENSION_TYPE, Container.SimpleGeometry>
+>;
+
+export const CONTAINER_SIZES: Record<
+  CONTAINER_SIZE,
+  Record<CONTAINER_TYPE, ContainerTypeData | null>
+> = {
   [CONTAINER_SIZE.TWENTY_FT]: {
     [CONTAINER_TYPE.STANDARD]: {
       [UNIT_SYSTEM.ENGLISH]: {
@@ -28,6 +38,7 @@ export const CONTAINER_SIZES = {
         [DIMENSION_TYPE.EXTERIOR]: { height: 2.59, width: 2.44, depth: 6.06 },
       },
     },
+    [CONTAINER_TYPE.HIGH_CUBE]: null,
   },
   [CONTAINER_SIZE.FORTY_FT]: {
     [CONTAINER_TYPE.STANDARD]: {
@@ -52,6 +63,7 @@ export const CONTAINER_SIZES = {
     },
   },
   [CONTAINER_SIZE.FORTY_FIVE_FT]: {
+    [CONTAINER_TYPE.STANDARD]: null,
     [CONTAINER_TYPE.HIGH_CUBE]: {
       [UNIT_SYSTEM.ENGLISH]: {
         [DIMENSION_TYPE.INTERIOR]: { height: 106, width: 92, depth: 534 },
