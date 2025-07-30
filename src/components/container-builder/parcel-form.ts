@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, model, output } from '@angular/core';
+import { Component, effect, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Container } from 'ol/util/type/container-type';
 import { Vector3 } from 'three';
@@ -90,12 +90,12 @@ import { DefaultParcel } from './util';
         <button (click)="createParcel()" class="btn btn-primary">
           Add Parcel
         </button>
-        <!-- <button (click)="updateParcel()" class="btn btn-secondary">
+        <button (click)="updateParcel()" class="btn btn-secondary">
           Update Selected
         </button>
         <button (click)="deleteParcel()" class="btn btn-secondary">
           Delete Selected
-        </button> -->
+        </button>
       </div>
     </div>
   `,
@@ -107,6 +107,14 @@ export class ParcelForm {
     parcel: Container.ContainerDatum;
     mesh: Container.ContainerMesh;
   }>();
+	onUpdateParcel = output<Container.ContainerDatum>()
+	onDeleteParcel = output<Container.ContainerDatum>()
+
+	constructor() {
+		effect(() => {
+			console.log(this.formData())
+		})
+	}
 
   createParcel(): void {
     if (!this.superContainer()) {
@@ -139,4 +147,34 @@ export class ParcelForm {
 
     this.formData().name = v4();
   }
+
+  updateParcel(): void {
+    const { geometry: formDataGeometry, position } = this.formData();
+    const { mesh } = formDataGeometry;
+
+    if (mesh && formDataGeometry.color) {
+      formDataGeometry.updateColorByHex(formDataGeometry.color);
+    }
+
+    const constrainedPos = ContainerScene.constrainToContainer(
+      new Vector3(
+        position.x,
+        position.y,
+        position.z
+      ),
+      this.formData(),
+      this.superContainer()!
+    );
+    mesh?.position.copy(constrainedPos);
+
+    position.x = parseFloat(constrainedPos.x.toFixed(1));
+    position.y = parseFloat(constrainedPos.y.toFixed(1));
+    position.z = parseFloat(constrainedPos.z.toFixed(1));
+
+		this.onUpdateParcel.emit(this.formData())
+  }
+
+	deleteParcel() {
+		this.onDeleteParcel.emit(this.formData())
+	}
 }

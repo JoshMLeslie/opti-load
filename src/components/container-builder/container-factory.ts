@@ -70,7 +70,7 @@ export const containerFactory = (
   };
 };
 
-class ReactiveGeometry implements Container.MeshedGeometry {
+export class ReactiveGeometry implements Container.MeshedGeometry {
   private _width: number;
   private _height: number;
   private _depth: number;
@@ -95,10 +95,27 @@ class ReactiveGeometry implements Container.MeshedGeometry {
     }
   }
 
+  updateSize({ height, width, depth }: Container.SimpleGeometry) {
+    this._height = height;
+    this._width = width;
+    this._depth = depth;
+    this._updateMesh();
+  }
+
+  updateColorByHex(code: string) {
+    this.mesh?.material.color.setHex(parseInt(code.replace('#', '0x')));
+  }
+
+  dispose() {
+    this.mesh?.geometry.dispose();
+    this.mesh?.material.dispose();
+  }
+
   get width() {
     return this._width;
   }
   set width(val: number) {
+		console.log(val)
     this._width = val;
     this._updateMesh();
   }
@@ -124,6 +141,7 @@ class ReactiveGeometry implements Container.MeshedGeometry {
   }
   set color(val: string | undefined) {
     this._color = val;
+    this._material = undefined;
     this._updateMesh();
   }
 
@@ -143,10 +161,14 @@ class ReactiveGeometry implements Container.MeshedGeometry {
         this._height,
         this._depth
       );
-    } else if (
-      this._boxGeometry.parameters.width !== this._width ||
-      this._boxGeometry.parameters.height !== this._height ||
-      this._boxGeometry.parameters.depth !== this._depth
+    }
+
+    const renderedSize = this._boxGeometry.parameters;
+    if (
+      renderedSize &&
+      (renderedSize.width !== this._width ||
+        renderedSize.height !== this._height ||
+        renderedSize.depth !== this._depth)
     ) {
       this._boxGeometry.dispose();
       this._boxGeometry = new BoxGeometry(

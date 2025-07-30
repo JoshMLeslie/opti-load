@@ -381,68 +381,37 @@ export class ContainerBuilder
     this.scene.add(mesh);
   }
 
-  updateParcel(): void {
-    if (!this.selectedParcel?.geometry.mesh) return;
-
-    const { geometry } = this.selectedParcel;
-    const { mesh } = geometry;
-
-    // Update geometry if dimensions changed
-    if (mesh?.geometry instanceof THREE.BoxGeometry) {
-      const currentSize = mesh.geometry.parameters;
-      if (
-        currentSize.width !== geometry.width ||
-        currentSize.height !== geometry.height ||
-        currentSize.depth !== geometry.depth
-      ) {
-        mesh.geometry.dispose();
-        mesh.geometry = new THREE.BoxGeometry(
-          geometry.width,
-          geometry.height,
-          geometry.depth
-        );
-      }
-    }
-
-    if (mesh && geometry.color) {
-      (mesh.material as THREE.MeshLambertMaterial).color.setHex(
-        parseInt(geometry.color.replace('#', '0x'))
-      );
-    }
-
-    const constrainedPos = ContainerScene.constrainToContainer(
-      new THREE.Vector3(
-        this.selectedParcel.position.x,
-        this.selectedParcel.position.y,
-        this.selectedParcel.position.z
-      ),
-      this.selectedParcel,
-      this.superContainer
-    );
-    mesh?.position.copy(constrainedPos);
-
-    this.selectedParcel.position.x = parseFloat(constrainedPos.x.toFixed(1));
-    this.selectedParcel.position.y = parseFloat(constrainedPos.y.toFixed(1));
-    this.selectedParcel.position.z = parseFloat(constrainedPos.z.toFixed(1));
-
+  private updateParcel(parcel: Container.ContainerDatum): void {
     this.updateGumball();
+    console.log(
+      parcel.geometry.mesh?.geometry.parameters,
+      this.selectedParcel?.geometry.mesh?.geometry.parameters
+    );
+    // this.onDeleteParcel(parcel);
+    this.onAddParcel({
+      parcel,
+      mesh: parcel.geometry.mesh as Container.ContainerMesh,
+    });
     this.cdr.detectChanges();
   }
 
-  deleteParcel(): void {
-    if (!this.selectedParcel?.geometry.mesh) return;
+  onUpdateParcel(parcel: Container.ContainerDatum): void {
+    this.updateParcel(parcel);
+  }
 
-    this.scene.remove(this.selectedParcel.geometry.mesh);
-    this.selectedParcel.geometry.mesh.geometry.dispose();
-    (this.selectedParcel.geometry.mesh.material as THREE.Material).dispose();
+  private deleteParcel(parcel: Container.ContainerDatum) {
+    if (!parcel.geometry.mesh) return;
 
-    this.parcels = this.parcels.filter((p) => p.id !== this.selectedParcel!.id);
+    this.scene.remove(parcel.geometry.mesh);
+    parcel.geometry.dispose();
+
+    this.parcels = this.parcels.filter((p) => p.id !== parcel!.id);
     this.removeGumball();
     this.selectedParcel = null;
     this.cdr.detectChanges();
   }
 
-  private nextParcelName() {
-    return `Parcel${this.parcels.length + 1}`;
+  onDeleteParcel(parcel: Container.ContainerDatum): void {
+    this.deleteParcel(parcel);
   }
 }

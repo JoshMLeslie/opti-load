@@ -18,7 +18,13 @@
   <div class="toolkit">
     <ol-shipping-container-form [(superContainer)]="superContainer" />
 
-		<ol-parcel-form [(formData)]="parcelForm" [superContainer]="superContainer" (onAddParcel)="onAddParcel($event)" />
+    <ol-parcel-form
+      [(formData)]="parcelForm"
+      [superContainer]="superContainer"
+      (onAddParcel)="onAddParcel($event)"
+      (onUpdateParcel)="onUpdateParcel($event)"
+      (onDeleteParcel)="onDeleteParcel($event)"
+    />
 
     <!-- Child Containers List -->
     <div class="panel children-list-panel">
