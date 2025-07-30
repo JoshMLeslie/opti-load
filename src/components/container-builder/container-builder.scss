@@ -1,27 +1,6 @@
+@use "container-vars" as *;
+@use "container-styles" as *;
 @use "sass:color";
-
-// Variables
-$color-bg-primary: #1a1a1a;
-$color-bg-secondary: #2d2d2d;
-$color-bg-tertiary: #3a3a3a;
-$color-bg-quaternary: #4a4a4a;
-$color-text-primary: #ffffff;
-$color-text-secondary: #b0b0b0;
-$color-text-muted: #888888;
-$color-accent: #4ade80;
-$color-accent-hover: #22c55e;
-$color-border: #555555;
-$color-border-selected: $color-accent;
-
-$spacing-xs: 0.25rem;
-$spacing-sm: 0.5rem;
-$spacing-md: 0.75rem;
-$spacing-lg: 1rem;
-$spacing-xl: 1.25rem;
-$spacing-2xl: 2rem;
-
-$border-radius: 0.5rem;
-$transition-base: all 0.2s ease;
 
 .container-builder {
   display: flex;
@@ -97,65 +76,6 @@ $transition-base: all 0.2s ease;
     font-size: 1.125rem;
     font-weight: 600;
     margin: 0 0 $spacing-xl 0;
-  }
-}
-
-// Form styles
-.form-group {
-  margin-bottom: $spacing-lg;
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.form-row {
-  display: flex;
-  gap: $spacing-lg;
-  margin-bottom: $spacing-lg;
-  
-  .form-group {
-    flex: 1;
-    margin-bottom: 0;
-  }
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.form-label {
-  display: block;
-  color: $color-text-secondary;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: $spacing-xs;
-}
-
-.form-input {
-  width: 100%;
-  padding: $spacing-sm $spacing-md;
-  background-color: $color-bg-quaternary;
-  border: 1px solid $color-border;
-  border-radius: $border-radius;
-  color: $color-text-primary;
-  font-size: 0.875rem;
-  transition: $transition-base;
-  
-  &:focus {
-    outline: none;
-    border-color: $color-accent;
-    box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
-  }
-  
-  &:hover:not(:focus) {
-    border-color: color.adjust($color-border, $lightness: 10%);
-  }
-  
-  &.color-input {
-    height: 2.5rem;
-    padding: $spacing-xs;
-    cursor: pointer;
   }
 }
 

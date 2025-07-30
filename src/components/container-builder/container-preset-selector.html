@@ -1,0 +1,100 @@
+<div class="container-preset-selector">
+  <details class="selector-details">
+    <summary class="selector-summary">
+      <h3 class="title">Preset Selector</h3>
+    </summary>
+
+    <div class="selector-group">
+      <div class="form-group">
+        <label class="form-label" for="container-size">Container Size</label>
+        <select
+          id="container-size"
+          [(ngModel)]="selectedSize"
+          class="form-input"
+        >
+          <option value="">Select size...</option>
+          @for (size of availableSizes(); track size) {
+          <option [value]="size">{{ formatSize(size) }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="container-type">Container Type</label>
+        <select
+          id="container-type"
+          [(ngModel)]="selectedType"
+          [disabled]="!selectedSize()"
+          class="form-input"
+        >
+          <option value="">Select type...</option>
+          @for (type of availableTypes(); track type) {
+          <option [value]="type">{{ formatType(type) }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="unit-system">Unit System</label>
+        <select
+          id="unit-system"
+          [(ngModel)]="selectedUnitSystem"
+          [disabled]="!selectedType()"
+          class="form-input"
+        >
+          <option value="">Select units...</option>
+          @for (unitSystem of availableUnitSystems(); track unitSystem) {
+          <option [value]="unitSystem">
+            {{ formatUnitSystem(unitSystem) }}
+          </option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="dimension-type">Dimension Type</label>
+        <select
+          id="dimension-type"
+          [(ngModel)]="selectedDimensionType"
+          [disabled]="!selectedUnitSystem()"
+          class="form-input"
+        >
+          <option value="">Select dimension type...</option>
+          @for (dimensionType of availableDimensionTypes(); track dimensionType)
+          {
+          <option [value]="dimensionType">
+            {{ formatDimensionType(dimensionType) }}
+          </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    @if (selectedDimensions(); as dimensions) {
+    <div class="results">
+      <h4 class="title">Container Dimensions</h4>
+      <div class="selection-summary">
+        <small>
+          {{ formatSize(selectedSize()!) }} {{ formatType(selectedType()!) }} -
+          {{ formatUnitSystem(selectedUnitSystem()!) }} -
+          {{ formatDimensionType(selectedDimensionType()!) }}
+        </small>
+      </div>
+      <div class="dimensions-row">
+        <div class="dimension-item">
+          <span class="dimension-label">Height: </span>
+          <span class="dimension-value">{{ dimensions.height }}</span>
+        </div>
+        <div class="dimension-item">
+          <span class="dimension-label">Width: </span>
+          <span class="dimension-value">{{ dimensions.width }}</span>
+        </div>
+        <div class="dimension-item">
+          <span class="dimension-label">Depth: </span>
+          <span class="dimension-value">{{ dimensions.depth }}</span>
+        </div>
+      </div>
+    </div>
+    }
+  </details>
+</div>

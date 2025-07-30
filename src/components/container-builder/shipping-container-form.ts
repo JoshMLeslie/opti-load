@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {
+	CONTAINER_SIZES,
+	DefaultPresetContainer,
+} from 'ol/util/const/container-sizes';
 import { Container } from 'ol/util/type/container-type';
 import { ReactiveGeometry } from './container-factory';
+import { ContainerPresetSelector } from './container-preset-selector';
 
 @Component({
   selector: 'ol-shipping-container-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ContainerPresetSelector],
   styleUrl: './container-builder.scss',
   template: `
     <div class="panel super-container-panel">
@@ -49,6 +54,9 @@ import { ReactiveGeometry } from './container-factory';
           />
         </div>
       </div>
+      <div class="form-row">
+        <ol-container-selector (onDimensionChange)="this.preset = $event" />
+      </div>
     </div>
   `,
 })
@@ -67,4 +75,20 @@ export class ShippingContainerForm {
       depth: 0,
     }),
   });
+  presets = CONTAINER_SIZES;
+  _preset: Container.PresetGeometry = DefaultPresetContainer;
+
+  set preset(val: Container.PresetGeometry) {
+		console.log("todo, track preset data / add a matching check?")
+		console.log("todo move inches / metric to a higher level")
+    this._preset = val;
+    this.superContainer.update((old) => {
+      const newData = { ...old };
+      newData.geometry = new ReactiveGeometry(val.geometry);
+      return newData;
+    });
+  }
+  get preset(): Container.PresetGeometry {
+    return this._preset;
+  }
 }

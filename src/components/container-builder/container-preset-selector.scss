@@ -1,0 +1,107 @@
+@use "container-vars" as *;
+@use "container-styles" as *;
+
+.container-preset-selector {
+  .selector-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: $spacing-lg;
+  }
+
+  summary.selector-summary h3 {
+    color: $color-accent;
+  }
+
+  .results {
+    margin-top: $spacing-lg;
+  }
+
+  .dimensions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-lg;
+    margin-bottom: $spacing-lg;
+    justify-content: center;
+  }
+
+  .dimension-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $spacing-md;
+    background-color: $color-bg-quaternary;
+    border: 1px solid $color-border;
+    border-radius: $border-radius;
+
+    .dimension-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: $color-text-muted;
+      margin-bottom: $spacing-xs;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dimension-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $color-text-primary;
+    }
+  }
+
+  .selection-summary {
+    text-align: center;
+    padding: $spacing-sm;
+
+    small {
+      color: $color-text-muted;
+      font-style: italic;
+    }
+  }
+
+  .selector-details {
+    summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::after {
+        content: "▼";
+        transform: rotate(-90deg);
+        transition: transform 0.2s ease;
+      }
+    }
+
+    &[open] summary::after {
+      transform: rotate(0deg);
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .selector-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dimensions-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dimension-item {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .dimension-label {
+        margin-bottom: 0;
+        margin-right: $spacing-lg;
+      }
+    }
+  }
+}

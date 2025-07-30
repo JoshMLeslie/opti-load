@@ -76,3 +76,11 @@ export const CONTAINER_SIZES: Record<
     },
   },
 };
+
+export const DefaultPresetContainer: Container.PresetGeometry = {
+  dimensionType: DIMENSION_TYPE.INTERIOR,
+  geometry: CONTAINER_SIZES.FORTY_FIVE_FT.HIGH_CUBE!.ENGLISH.INTERIOR,
+  size: CONTAINER_SIZES.FORTY_FIVE_FT,
+  type: CONTAINER_TYPE.HIGH_CUBE,
+  unitSystem: UNIT_SYSTEM.ENGLISH,
+};

@@ -24,4 +24,12 @@ export module Container {
     geometry: ReactiveGeometry;
     children?: ContainerDatum[];
   }
+
+	interface PresetGeometry {
+    size: CONTAINER_SIZE;
+    type: CONTAINER_TYPE;
+    unitSystem: UNIT_SYSTEM;
+    dimensionType: DIMENSION_TYPE;
+    geometry: Container.SimpleGeometry;
+  }
 }
