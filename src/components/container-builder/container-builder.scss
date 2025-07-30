@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables
 $color-bg-primary: #1a1a1a;
 $color-bg-secondary: #2d2d2d;
@@ -147,7 +149,7 @@ $transition-base: all 0.2s ease;
   }
   
   &:hover:not(:focus) {
-    border-color: lighten($color-border, 10%);
+    border-color: color.adjust($color-border, $lightness: 10%);
   }
   
   &.color-input {
@@ -197,7 +199,7 @@ $transition-base: all 0.2s ease;
     color: $color-text-primary;
     
     &:hover:not(:disabled) {
-      background-color: lighten($color-bg-quaternary, 10%);
+      background-color: color.adjust($color-bg-quaternary, $lightness: 10%);
     }
   }
 }
@@ -244,13 +246,13 @@ $transition-base: all 0.2s ease;
   transition: $transition-base;
   
   &:hover:not(.selected) {
-    background-color: lighten($color-bg-quaternary, 5%);
+    background-color: color.adjust($color-bg-quaternary, $lightness: 5%);
     border-color: rgba(255, 255, 255, 0.1);
   }
   
   &.selected {
     border-color: $color-border-selected;
-    background-color: lighten($color-bg-quaternary, 8%);
+    background-color: color.adjust($color-bg-quaternary, $lightness: 8%);
   }
   
   &:last-child {
