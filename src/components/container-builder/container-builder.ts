@@ -12,13 +12,7 @@ import { Container } from 'ol/util/type/container-type';
 import * as THREE from 'three';
 import { ContainerScene } from './container-scene';
 import { ShippingContainerForm } from './shipping-container-form';
-
-const DefaultParcel: Container.Parcel = {
-  id: 0,
-  name: 'Parcel1',
-  containerPosition: { x: 0, y: 1, z: 0 },
-  geometry: { width: 2, height: 2, depth: 2, color: '#0167d3' },
-};
+import { DefaultParcel } from './util';
 
 @Component({
   selector: 'ol-container-builder',
