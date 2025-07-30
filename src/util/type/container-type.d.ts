@@ -1,6 +1,7 @@
 import { BoxGeometry, Mesh, MeshLambertMaterial } from 'three';
 
 export module Container {
+	type ContainerMesh = Mesh<BoxGeometry, MeshLambertMaterial>
   interface SimpleGeometry {
     width: number;
     height: number;
@@ -8,13 +9,13 @@ export module Container {
   }
   interface MeshedGeometry extends SimpleGeometry {
     color?: string;
-    mesh?: Mesh<BoxGeometry, MeshLambertMaterial>;
+    mesh?: ContainerMesh;
   }
 
   interface ContainerDatum {
     id: number;
     name: string;
-    containerPosition: {
+    position: {
       x: number;
       y: number;
       z: number;
