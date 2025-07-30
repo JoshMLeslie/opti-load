@@ -7,6 +7,7 @@ import { Container } from 'ol/util/type/container-type';
   selector: 'ol-shipping-container-form',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styleUrl: './container-builder.scss',
   template: `
     <div class="panel super-container-panel">
       <h3 class="panel-title">Super Container</h3>
@@ -23,7 +24,7 @@ import { Container } from 'ol/util/type/container-type';
           <label class="form-label">Width</label>
           <input
             type="number"
-            [(ngModel)]="superContainer().width"
+            [(ngModel)]="superContainer().geometry.width"
             step="0.1"
             class="form-input"
           />
@@ -32,7 +33,7 @@ import { Container } from 'ol/util/type/container-type';
           <label class="form-label">Height</label>
           <input
             type="number"
-            [(ngModel)]="superContainer().height"
+            [(ngModel)]="superContainer().geometry.height"
             step="0.1"
             class="form-input"
           />
@@ -41,7 +42,7 @@ import { Container } from 'ol/util/type/container-type';
           <label class="form-label">Depth</label>
           <input
             type="number"
-            [(ngModel)]="superContainer().depth"
+            [(ngModel)]="superContainer().geometry.depth"
             step="0.1"
             class="form-input"
           />
@@ -49,13 +50,20 @@ import { Container } from 'ol/util/type/container-type';
       </div>
     </div>
   `,
-  styleUrl: './container-builder.scss',
 })
 export class ShippingContainerForm {
-  superContainer = model<Container.ShippingContainer>({
-    name: 'MainContainer',
-    width: 10,
-    height: 6,
-    depth: 10,
+  superContainer = model<Container.ContainerDatum>({
+    id: 0,
+    name: '',
+    position: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    geometry: {
+      height: 0,
+      width: 0,
+      depth: 0,
+    },
   });
 }
