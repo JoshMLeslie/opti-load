@@ -10,14 +10,16 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Container } from 'ol/util/type/container-type';
 import * as THREE from 'three';
+import { containerFactory } from './container-factory';
 import { ContainerScene } from './container-scene';
+import { ParcelForm } from './parcel-form';
 import { ShippingContainerForm } from './shipping-container-form';
 import { DefaultParcel } from './util';
 
 @Component({
   selector: 'ol-container-builder',
   standalone: true,
-  imports: [CommonModule, FormsModule, ShippingContainerForm],
+  imports: [CommonModule, FormsModule, ShippingContainerForm, ParcelForm],
   templateUrl: './container-builder.html',
   styleUrl: './container-builder.scss',
   styles: `	
@@ -39,20 +41,19 @@ export class ContainerBuilder
     super.init(ref);
   }
 
-  superContainer: Container.ContainerDatum = {
-    id: 0,
+  superContainer: Container.ContainerDatum = containerFactory({
     name: 'MainContainer',
-    containerPosition: {
+    position: {
       x: 0,
       y: 0,
       z: 0,
     },
-    geometry: {
+    custom_geometry: {
       width: 10,
       height: 6,
       depth: 10,
     },
-  };
+  });
 
   parcels: Container.ContainerDatum[] = [];
   selectedParcel: Container.ContainerDatum | null = null;
@@ -356,10 +357,7 @@ export class ContainerBuilder
       // Remove illumination from selected parcel
       this.getMeshMaterial(this.selectedParcel)?.emissive.setHex(0x000000);
       this.selectedParcel = null;
-      this.parcelForm = {
-        ...DefaultParcel,
-        name: this.nextParcelName(),
-      };
+      this.parcelForm = { ...DefaultParcel };
     } else if (parcel) {
       // Illuminate selected parcel
       this.getMeshMaterial(parcel)?.emissive.setHex(0x444444);
@@ -372,54 +370,15 @@ export class ContainerBuilder
     this.cdr.detectChanges();
   }
 
-  addParcel(): void {
-    const geometry = new THREE.BoxGeometry(
-      this.parcelForm.geometry.width,
-      this.parcelForm.geometry.height,
-      this.parcelForm.geometry.depth
-    );
-    const material = new THREE.MeshLambertMaterial({
-      color: this.parcelForm.geometry.color,
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-
-    let useName = this.selectedParcel
-      ? this.nextParcelName()
-      : this.parcelForm.name;
-
-    const parcel: Container.ContainerDatum = {
-      id: Date.now(),
-      name: useName,
-      containerPosition: { ...this.parcelForm.containerPosition },
-      geometry: {
-        ...this.parcelForm.geometry,
-        mesh: mesh,
-      },
-    };
-
-    const constrainedPos = ContainerScene.constrainToContainer(
-      new THREE.Vector3(
-        parcel.containerPosition.x,
-        parcel.containerPosition.y,
-        parcel.containerPosition.z
-      ),
-      parcel,
-      this.superContainer
-    );
-    mesh.position.copy(constrainedPos);
-
-    // Update parcel position to constrained values
-    parcel.containerPosition.x = parseFloat(constrainedPos.x.toFixed(1));
-    parcel.containerPosition.y = parseFloat(constrainedPos.y.toFixed(1));
-    parcel.containerPosition.z = parseFloat(constrainedPos.z.toFixed(1));
-
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-
+  onAddParcel({
+    parcel,
+    mesh,
+  }: {
+    parcel: Container.ContainerDatum;
+    mesh: Container.ContainerMesh;
+  }): void {
     this.parcels.push(parcel);
     this.scene.add(mesh);
-
-    this.parcelForm.name = this.nextParcelName();
   }
 
   updateParcel(): void {
