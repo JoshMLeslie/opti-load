@@ -1,7 +1,8 @@
+import { ReactiveGeometry } from 'ol/components/container-builder/container-factory';
 import { BoxGeometry, Mesh, MeshLambertMaterial } from 'three';
 
 export module Container {
-	type ContainerMesh = Mesh<BoxGeometry, MeshLambertMaterial>
+  type ContainerMesh = Mesh<BoxGeometry, MeshLambertMaterial>;
   interface SimpleGeometry {
     width: number;
     height: number;
@@ -20,7 +21,7 @@ export module Container {
       y: number;
       z: number;
     };
-    geometry: MeshedGeometry;
+    geometry: ReactiveGeometry;
     children?: ContainerDatum[];
   }
 }

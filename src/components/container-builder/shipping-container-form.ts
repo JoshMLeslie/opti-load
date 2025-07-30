@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Container } from 'ol/util/type/container-type';
+import { ReactiveGeometry } from './container-factory';
 
 @Component({
   selector: 'ol-shipping-container-form',
@@ -60,10 +61,10 @@ export class ShippingContainerForm {
       y: 0,
       z: 0,
     },
-    geometry: {
+    geometry: new ReactiveGeometry({
       height: 0,
       width: 0,
       depth: 0,
-    },
+    }),
   });
 }
