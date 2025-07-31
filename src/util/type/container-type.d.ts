@@ -3,6 +3,7 @@ import { BoxGeometry, Mesh, MeshLambertMaterial } from 'three';
 
 export module Container {
   type ContainerMesh = Mesh<BoxGeometry, MeshLambertMaterial>;
+	type KeyOfSimpleGeometry = keyof Container.SimpleGeometry
   interface SimpleGeometry {
     width: number;
     height: number;

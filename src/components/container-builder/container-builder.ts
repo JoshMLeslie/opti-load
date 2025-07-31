@@ -5,7 +5,7 @@ import {
 	Component,
 	ElementRef,
 	OnDestroy,
-	ViewChild,
+	ViewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Container } from 'ol/util/type/container-type';
@@ -78,10 +78,11 @@ export class ContainerBuilder
       (this.superContainerMesh.material as THREE.Material).dispose();
     }
 
+    const superGeometry = this.superContainer.geometry;
     const geometry = new THREE.BoxGeometry(
-      this.superContainer.geometry.width,
-      this.superContainer.geometry.height,
-      this.superContainer.geometry.depth
+      superGeometry.width,
+      superGeometry.height,
+      superGeometry.depth
     );
     const material = new THREE.MeshBasicMaterial({
       color: 0x333333,
@@ -91,11 +92,7 @@ export class ContainerBuilder
     });
 
     this.superContainerMesh = new THREE.Mesh(geometry, material);
-    this.superContainerMesh.position.set(
-      0,
-      this.superContainer.geometry.height / 2,
-      0
-    );
+    this.superContainerMesh.position.set(0, superGeometry.height / 2, 0);
     this.scene.add(this.superContainerMesh);
   }
 

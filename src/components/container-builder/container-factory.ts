@@ -95,11 +95,22 @@ export class ReactiveGeometry implements Container.MeshedGeometry {
     }
   }
 
-  updateSize({ height, width, depth }: Container.SimpleGeometry) {
-    this._height = height;
-    this._width = width;
-    this._depth = depth;
+  updateSize({
+    height,
+    width,
+    depth,
+  }: Partial<Container.SimpleGeometry>): ReactiveGeometry {
+    if (height) {
+      this._height = height;
+    }
+    if (width) {
+      this._width = width;
+    }
+    if (depth) {
+      this._depth = depth;
+    }
     this._updateMesh();
+    return this;
   }
 
   updateColorByHex(code: string) {
@@ -115,7 +126,7 @@ export class ReactiveGeometry implements Container.MeshedGeometry {
     return this._width;
   }
   set width(val: number) {
-		console.log(val)
+    console.log(val);
     this._width = val;
     this._updateMesh();
   }

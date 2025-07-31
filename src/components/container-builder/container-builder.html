@@ -16,7 +16,10 @@
   </div>
 
   <div class="toolkit">
-    <ol-shipping-container-form [(superContainer)]="superContainer" />
+    <ol-shipping-container-form
+      [(superContainer)]="superContainer"
+      (superContainerChange)="this.updateSuperContainerMesh()"
+    />
 
     <ol-parcel-form
       [(formData)]="parcelForm"
